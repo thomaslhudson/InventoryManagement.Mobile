@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             ios:Page.UseSafeArea="true"             
+             xmlns:vm="clr-namespace:InventoryManagement.Mobile.ViewModels"  
+             xmlns:m="clr-namespace:InventoryManagement.Mobile.Models"
+             xmlns:Helpers="clr-namespace:InventoryManagement.Mobile.Helpers.Converters"
+             x:DataType="vm:ProductsViewModel"
+             x:Class="InventoryManagement.Mobile.Views.ProductsView"
+             x:Name="ViewProducts"
+             Title="Product List">
+    <!-- Tool Bar -->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Helpers:InverseBoolConverter x:Key="InverseBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Add" Command="{Binding AddProductCommand}" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <ScrollView x:Name="ScrollArea" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <StackLayout BackgroundColor="#96d1ff" Margin="0" Padding="0" Spacing="0" Orientation="Vertical">
+                <Grid HorizontalOptions="CenterAndExpand">
+                    <Grid.RowDefinitions>
+                        <!-- Row: Search Bar -->
+                        <RowDefinition Height="50" />
+                        <!-- Row: Show/Hide Image Button -->
+                        <RowDefinition Height="45" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <!-- Search Bar -->
+                    <SearchBar Grid.Row="0" x:Name="SearchBar" HorizontalOptions="FillAndExpand" IsEnabled="{Binding SearchBarEnabled}" Margin="0" 
+                           Text="{Binding SearchText}" WidthRequest="500">
+                        <SearchBar.HeightRequest>
+                            <OnPlatform x:TypeArguments="x:Double" iOS="-1.0" Android="40.0" WinPhone="-1" />
+                        </SearchBar.HeightRequest>
+                    </SearchBar>
+                    <!-- Show / Hide Button -->
+                    <ImageButton Grid.Row="1" Background="#96d1ff" BackgroundColor="#96d1ff" HeightRequest="45" Padding="0,0,0,1" Command="{Binding ToggleFiltersCommand}" 
+                             Source="{Binding FilterButtonImageSource}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
+                </Grid>
+                <!-- Filter Options -->
+                <Frame BorderColor="Transparent" BackgroundColor="#96d1ff" HorizontalOptions="FillAndExpand" Padding="5" IsVisible="{Binding FiltersVisible}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <!-- Row: Group Picker -->
+                            <RowDefinition Height="65" />
+                            <!-- Row: Status Radio Buttons -->
+                            <RowDefinition Height="40" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <!-- Group Picker -->
+                        <Picker Grid.Row="0" x:Name="GroupPicker" FontSize="Medium" Margin="5" TextColor="White" WidthRequest="250" 
+                            ItemDisplayBinding="{Binding Name}" ItemsSource="{Binding Groups}" SelectedItem="{Binding SelectedGroup, Mode=TwoWay}" />
+                        <!-- Status Radio Buttons Button -->
+                        <StackLayout Grid.Row="1" HorizontalOptions="Center" Orientation="Horizontal" Padding="0, 0, 0, 15"
+                                RadioButtonGroup.GroupName="Status" RadioButtonGroup.SelectedValue="{Binding SelectedStatus}" >
+                            <RadioButton Padding="10" GroupName="Status" Content="Active" Value="Active" FontSize="Medium" TextColor="White" />
+                            <RadioButton Padding="10" GroupName="Status" Content="Inactive" Value="Inactive" FontSize="Medium" TextColor="White" />
+                            <RadioButton Padding="10" GroupName="Status" Content="All" Value="All" FontSize="Medium" TextColor="White" />
+                        </StackLayout>
+                    </Grid>
+                </Frame>
+                <!-- Products List -->
+                <CollectionView Grid.Row="4"
+                x:DataType="vm:ProductsViewModel"
+                x:Name="ProductsCollection"
+                ItemsSource="{Binding ProductsFiltered}"
+                SelectionMode="Single"
+                VerticalOptions="StartAndExpand" Background="White" VerticalScrollBarVisibility="Always">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="m:Product">
+                            <SwipeView>
+                                <SwipeView.RightItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="Deactivate"
+                                            BackgroundColor="Red"
+                                            Command="{Binding Path=BindingContext.ToggleIsActiveCommand, Source={x:Reference ProductsCollection}}"
+                                            CommandParameter="{Binding}" 
+                                            IsVisible="{Binding IsActive}" />
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <SwipeView.LeftItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="Activate"
+                                            BackgroundColor="Green"
+                                            Command="{Binding Path=BindingContext.ToggleIsActiveCommand, Source={x:Reference ProductsCollection}}"
+                                            CommandParameter="{Binding}" 
+                                            IsVisible="{Binding IsActive, Converter={StaticResource InverseBoolConverter}}" />
+                                    </SwipeItems>
+                                </SwipeView.LeftItems>
+                                <Frame BorderColor="LightGray" HorizontalOptions="FillAndExpand">
+                                    <StackLayout x:Name="Product" x:DataType="m:Product" Orientation="Horizontal">
+                                        <StackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer 
+                                            Command="{Binding Path=BindingContext.SelectProductCommand, Source={x:Reference Name=ProductsCollection}}"
+                                            CommandParameter="{Binding Id }" />
+                                        </StackLayout.GestureRecognizers>
+                                        <Label Text="{Binding Name}" LineBreakMode="NoWrap" FontSize="16" HorizontalOptions="StartAndExpand" />
+                                    </StackLayout>
+                                </Frame>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    <CollectionView.EmptyView>
+                        <StackLayout BackgroundColor="White" HorizontalOptions="CenterAndExpand">
+                            <Label HorizontalOptions="CenterAndExpand" Padding="25" Text="No Products found" FontAttributes="Bold" />
+                        </StackLayout>
+                    </CollectionView.EmptyView>
+                </CollectionView>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

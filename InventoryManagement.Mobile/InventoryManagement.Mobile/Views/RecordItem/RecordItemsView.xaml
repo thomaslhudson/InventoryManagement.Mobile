@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             ios:Page.UseSafeArea="true"
+             x:Class="InventoryManagement.Mobile.Views.RecordItemsView"
+             xmlns:local="clr-namespace:InventoryManagement.Mobile.ViewModels"  
+             xmlns:model="clr-namespace:InventoryManagement.Mobile.Models"
+             x:DataType="local:RecordItemsViewModel"
+             Title="{Binding PageTitle}">
+    <!-- Tool Bar -->
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Add" Command="{Binding AddRecordItemCommand}" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <ScrollView x:Name="ScrollArea" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <StackLayout Padding="0" Spacing="0">
+                <StackLayout Orientation="Horizontal" BackgroundColor="#96d1ff" HorizontalOptions="FillAndExpand" Padding="5">
+                    <!-- Search Bar -->
+                    <SearchBar x:Name="SearchBar" IsVisible="{Binding SearchBarVisible}" HorizontalOptions="FillAndExpand" Text="{Binding SearchText}">
+                        <SearchBar.HeightRequest>
+                            <OnPlatform x:TypeArguments="x:Double" iOS="-1.0" Android="40.0" WinPhone="-1" />
+                        </SearchBar.HeightRequest>
+                    </SearchBar>
+                </StackLayout>
+                <!-- Record Entries Collection -->
+                <CollectionView x:DataType="local:RecordItemsViewModel" 
+                x:Name="RecordItemsCollection"
+                ItemsSource="{Binding RecordItemsFiltered}"
+                SelectionMode="Single">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:RecordItem">
+                            <Frame BorderColor="LightGray" HorizontalOptions="FillAndExpand">
+                                <StackLayout x:Name="RecordItem" x:DataType="model:RecordItem">
+                                    <StackLayout.GestureRecognizers>
+                                        <TapGestureRecognizer 
+                                            Command="{Binding Path=BindingContext.SelectRecordItemCommand, Source={x:Reference Name=RecordItemsCollection}}"
+                                            CommandParameter="{Binding Id }" NumberOfTapsRequired="1" />
+                                    </StackLayout.GestureRecognizers>
+                                    <StackLayout WidthRequest="200" Orientation="Vertical">
+                                        <Label Text="{Binding ProductName}" LineBreakMode="NoWrap" FontAttributes="Bold" FontSize="16" HorizontalOptions="StartAndExpand" />
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="Quantity:" FontSize="12" />
+                                        <Label Text="{Binding Quantity}" LineBreakMode="NoWrap" FontAttributes="Bold" FontSize="12" HorizontalOptions="StartAndExpand" />
+                                    </StackLayout>
+                                </StackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    <CollectionView.EmptyView>
+                        <StackLayout>
+                            <StackLayout Padding="10, 25" HorizontalOptions="CenterAndExpand">
+                                <Label Text="No records found" FontAttributes="Bold" />
+                            </StackLayout>
+                        </StackLayout>
+                    </CollectionView.EmptyView>
+                </CollectionView>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

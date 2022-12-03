@@ -1,0 +1,98 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+	<_WriteTelemetryProperties>false</_WriteTelemetryProperties>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Helpers\Exceptions\Example-SerializableExceptions.cs" />
+    <Compile Remove="Helpers\Exceptions\SerializableExceptions.cs" />
+    <Compile Remove="ViewModels\ScanUpcViewModel.cs" />
+    <Compile Remove="Views\ScanUpcView.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Views\ScanUpcView.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="GettingStarted.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0-preview.1.22076.8" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0-preview.1.22076.8" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0-preview.1.22076.8" />
+    <PackageReference Include="System.Text.Json" Version="7.0.0-preview.1.22076.8" />
+    <PackageReference Include="Xam.Plugin.SimpleAudioPlayer" Version="1.5.0" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2337" />  
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.1" />  
+    <PackageReference Include="ZXing.Net.Mobile.Forms" Version="3.0.0-beta5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\Group\GroupsView.xaml.cs">
+      <DependentUpon>GroupsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Group\GroupDetailView.xaml.cs">
+      <DependentUpon>GroupDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\RecordItem\RecordItemsView.xaml.cs">
+      <DependentUpon>RecordItemsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\RecordItem\RecordItemDetailView.xaml.cs">
+      <DependentUpon>RecordItemDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Report\ReportsView.xaml.cs">
+      <DependentUpon>ReportsView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Views\Group\GroupAddView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\HomeView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Product\ProductAddView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Product\ProductDetailView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Group\GroupDetailView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Group\GroupsView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Product\ProductsView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Record\RecordAddView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\RecordItem\RecordItemsView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\RecordItem\RecordItemDetailView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Record\RecordsView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Report\GroupTotalsByRecordSubsetView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Report\GroupTotalsByRecordView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Report\ReportsView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

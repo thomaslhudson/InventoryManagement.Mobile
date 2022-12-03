@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             ios:Page.UseSafeArea="true"
+             xmlns:local="clr-namespace:InventoryManagement.Mobile.ViewModels"
+             xmlns:model="clr-namespace:InventoryManagement.Mobile.Models"
+             xmlns:Helpers="clr-namespace:InventoryManagement.Mobile.Helpers.Converters" 
+             x:DataType="local:ScanUpcViewModel"
+             x:Class="InventoryManagement.Mobile.Views.ScanUpcView"
+             x:Name="ScanUpcPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Helpers:MonthNumToName x:Key="monthNumToName" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <StackLayout Padding="0" Spacing="0" Orientation="Vertical" VerticalOptions="StartAndExpand">
+            <!--<StackLayout Margin="20">-->
+            <Grid ColumnDefinitions="1*" RowDefinitions="1*, Auto" Margin="20">
+                <Label Grid.Row="0" Text="Select Inventory Record" FontSize="Medium" />
+                <Picker Grid.Row="1" ItemDisplayBinding="{Binding MonthYear}" ItemsSource="{Binding Records}" 
+                        SelectedItem="{Binding SelectedRecord, Mode=TwoWay}" IsEnabled="{Binding RecordPickerEnabled}" />
+            </Grid>
+            <!--</StackLayout>-->
+            <!-- Tabs -->
+            <Grid ColumnDefinitions="1*, 1*" RowDefinitions="1*, Auto" Margin="25">
+                <Button BackgroundColor="{Binding EnterManuallyButtonBGColor}" Command="{Binding BindingContext.ToggleTabsCommand, Source={x:Reference ScanUpcPage}}" 
+                        CommandParameter="ScanUPC" Text="Scan UPC" TextColor="{Binding EnterManuallyButtonTextColor}" Grid.Row="0" Grid.Column="0" />
+                <Button BackgroundColor="{Binding ShowScannerButtonBGColor}" Command="{Binding BindingContext.ToggleTabsCommand, Source={x:Reference ScanUpcPage}}" 
+                        CommandParameter="ManualInput" Text="Manual Input" Grid.Row="0" Grid.Column="1" TextColor="{Binding ShowScannerButtonTextColor}" >
+                </Button>
+            </Grid>
+
+            <StackLayout x:Name="ScannerView" Padding="25" VerticalOptions="Center" IsVisible="{Binding BindingContext.ScannerViewIsVisible, Source={x:Reference ScanUpcPage}}">
+
+                <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+
+                    <zxing:ZXingScannerView
+                        x:Name="Scanner"
+                        IsAnalyzing="{Binding BindingContext.IsAnalyzing, Source={x:Reference ScanUpcPage}, Mode=TwoWay}"
+                        IsScanning="{Binding BindingContext.IsScanning, Source={x:Reference ScanUpcPage}, Mode=TwoWay}"
+                        ScanResultCommand="{Binding BindingContext.ProcessScanResultCommand, Source={x:Reference ScanUpcPage}, Mode=TwoWay}" 
+                        Result="{Binding BindingContext.ScanResult, Source={x:Reference ScanUpcPage}, Mode=OneWayToSource}"
+                        HeightRequest="300" HorizontalOptions="FillAndExpand" />
+
+                    <zxing:ZXingDefaultOverlay />
+
+                </Grid>
+
+                <Button Command="{Binding BindingContext.ScanBarcodeCommand, Source={x:Reference ScanUpcPage}, 
+                    Mode=TwoWay}" Text="Scan Bar Code" WidthRequest="200" HorizontalOptions="Center" VerticalOptions="Center" 
+                    Margin="20" IsEnabled="{Binding ScanBarcodeButtonEnabled}" />
+            </StackLayout>
+            <Grid Padding="20,0,20,0" Margin="0" IsVisible="{Binding BindingContext.ManualInputIsVisible, Source={x:Reference ScanUpcPage}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="400" />
+                    <ColumnDefinition Width="400" />
+                </Grid.ColumnDefinitions>
+                <!-- Status Radio Buttons Button -->
+                <Grid HorizontalOptions="Center" Padding="0,0,0,15" RadioButtonGroup.GroupName="ManualInputType" RadioButtonGroup.SelectedValue="{Binding SelectedManualInputType}">
+                    <RadioButton Grid.Column="0" Padding="10" GroupName="ManualInputType" Content="Enter UPC" Value="ByUpc" FontSize="Medium" />
+                    <RadioButton Grid.Column="1" Padding="10" GroupName="ManualInputType" Content="Select Product" Value="ByProduct" FontSize="Medium" />
+                </Grid>
+            </Grid>
+            <Grid Padding="20,0,20,0" Margin="0" IsVisible="{Binding BindingContext.ManualInputIsVisible, Source={x:Reference ScanUpcPage}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="500" />
+                    <RowDefinition Height="50" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <!-- Select Product -->
+                <Frame Grid.Row="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Padding="5" IsVisible="{Binding ProductsListVisible}" BorderColor="Transparent">
+                    <Grid Margin="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <SearchBar Grid.Row="0" x:Name="SearchBar" Margin="0,0,0,20" HorizontalOptions="FillAndExpand" Text="{Binding SearchProductText}">
+                            <SearchBar.HeightRequest>
+                                <OnPlatform x:TypeArguments="x:Double" iOS="-1.0" Android="40.0" WinPhone="-1" />
+                            </SearchBar.HeightRequest>
+                        </SearchBar>
+                        <CollectionView Grid.Row="1"
+                            x:DataType="local:ScanUpcViewModel" 
+                            x:Name="ProductsCollection"
+                            ItemsSource="{Binding Products}"
+                            SelectionMode="Single"
+                            VerticalOptions="StartAndExpand" VerticalScrollBarVisibility="Always">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="model:Product">
+                                    <Frame BorderColor="LightGray" HorizontalOptions="FillAndExpand">
+                                        <StackLayout x:Name="Product" x:DataType="model:Product" Orientation="Horizontal">
+                                            <StackLayout.GestureRecognizers>
+                                                <TapGestureRecognizer 
+                                            Command="{Binding Path=BindingContext.SelectProductCommand, Source={x:Reference Name=ProductsCollection}}"
+                                            CommandParameter="{Binding .}" />
+                                            </StackLayout.GestureRecognizers>
+                                            <Label Text="{Binding Name}" LineBreakMode="NoWrap" FontSize="16" HorizontalOptions="StartAndExpand" />
+                                        </StackLayout>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                            <CollectionView.EmptyView>
+                                <StackLayout BackgroundColor="White" HorizontalOptions="CenterAndExpand">
+                                    <Label HorizontalOptions="CenterAndExpand" Padding="25" Text="No Products found" FontAttributes="Bold" />
+                                </StackLayout>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+                    </Grid>
+                </Frame>
+                <!-- Enter UPC -->
+                <Frame Grid.Row="1" HorizontalOptions="FillAndExpand" Padding="5" IsVisible="{Binding EnterUpcVisible}" BorderColor="Transparent">
+                    <Grid Padding="20,0,20,0" Margin="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Text="Enter UPC" Margin="0,0,0,0" HeightRequest="50" FontAttributes="Bold" />
+                        <Entry Grid.Row="1" x:Name="EntryUpc" Text="{Binding EntryUpc}" Keyboard="Numeric" />
+                        <!--<Button Command="{Binding BindingContext.SubmitUpcCommand, Source={x:Reference ScanUpcPage}, Mode=TwoWay}" 
+                        CommandParameter="{Binding Source={x:Reference EntryUpc}, Path=Text}"
+                        Text="Submit" HorizontalOptions="Center" IsEnabled="False" BackgroundColor="Gray" />-->
+                        <Button Grid.Row="2" Command="{Binding SubmitUpcCommand}" CommandParameter="{Binding Source={x:Reference EntryUpc}, Path=Text}"
+                        Margin="0,15,0,0"
+                        Text="Find By UPC" HorizontalOptions="Center" VerticalOptions="Center" IsEnabled="False" BackgroundColor="Gray" HeightRequest="40" />
+                    </Grid>
+                </Frame>
+            </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

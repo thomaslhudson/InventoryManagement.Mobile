@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:InventoryManagement.Mobile.ViewModels"
+             x:Class="InventoryManagement.Mobile.Views.RecordAddView"
+             x:DataType="vm:RecordAddViewModel"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             ios:Page.UseSafeArea="true"
+             Title="Add Inventory Record">
+    <ContentPage.Content>
+        <ScrollView x:Name="ScrollArea" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <StackLayout Spacing="3" Padding="15">
+                <Label Text="Month" FontSize="Medium" />
+                <Picker x:Name="MonthPicker" ItemDisplayBinding="{Binding Key}" ItemsSource="{Binding MonthKeyValueList}" SelectedItem="{Binding SelectedMonth}" />
+
+                <Label Text="Year" FontSize="Medium" />
+                <Picker x:Name="YearPicker" ItemsSource="{Binding YearList}" SelectedItem="{Binding SelectedYear}" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Text="Cancel" Command="{Binding CancelCommand}" HorizontalOptions="FillAndExpand"></Button>
+                    <Button Grid.Column="1" Text="Create" Command="{Binding CreateCommand}" HorizontalOptions="FillAndExpand"></Button>
+                </Grid>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

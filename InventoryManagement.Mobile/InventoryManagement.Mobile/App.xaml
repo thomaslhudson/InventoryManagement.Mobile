@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="InventoryManagement.Mobile.App">
+
+    <!-- Define global resources and styles here, that apply to all pages in your app.-->
+    <Application.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Primary">#2196F3</Color>
+            <Style TargetType="Button">
+                <Setter Property="TextColor" Value="White"></Setter>
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Disabled">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="#332196F3" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+            <!--<Style TargetType="NavigationPage">
+                <Setter Property="BarBackgroundColor" Value="#ff5300"/>
+                <Setter Property="BarTextColor" Value="White"/>
+            </Style>-->
+            <x:Array x:Key="Months" Type="{x:Type x:String}">
+                <x:String>January</x:String>
+                <x:String>February</x:String>
+                <x:String>March</x:String>
+                <x:String>April</x:String>
+                <x:String>May</x:String>
+                <x:String>June</x:String>
+                <x:String>July</x:String>
+                <x:String>August</x:String>
+                <x:String>September</x:String>
+                <x:String>October</x:String>
+                <x:String>November</x:String>
+                <x:String>December</x:String>
+            </x:Array>
+            <x:Array x:Key="Years" Type="{x:Type x:Int16}">
+                <x:Int16>2030</x:Int16>
+                <x:Int16>2029</x:Int16>
+                <x:Int16>2028</x:Int16>
+                <x:Int16>2027</x:Int16>
+                <x:Int16>2026</x:Int16>
+                <x:Int16>2025</x:Int16>
+                <x:Int16>2024</x:Int16>
+                <x:Int16>2023</x:Int16>
+                <x:Int16>2022</x:Int16>
+                <x:Int16>2021</x:Int16>
+                <x:Int16>2020</x:Int16>
+            </x:Array>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

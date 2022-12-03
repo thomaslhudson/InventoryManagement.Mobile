@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModel="clr-namespace:InventoryManagement.Mobile.ViewModels"
+             xmlns:model="clr-namespace:InventoryManagement.Mobile.Models"             
+             x:Class="InventoryManagement.Mobile.Views.Report.GroupTotalsByRecordSubsetView"
+             x:DataType="viewModel:GroupTotalsByRecordSubsetViewModel"
+             Title="Select Groups Totals by Record">
+    <ContentPage.Content>
+        <ScrollView x:Name="ScrollArea" WidthRequest="{Binding ScreenWidth}" HeightRequest="{Binding ScreenHeight}" 
+                    Margin="0" HorizontalOptions="StartAndExpand" VerticalOptions="StartAndExpand">
+            <Grid ColumnDefinitions="{Binding ScreenWidth}" RowDefinitions="55,Auto,Auto" Margin="25" Padding="0" HorizontalOptions="Start">
+                <Grid Grid.Row="0" ColumnDefinitions="Auto,Auto" RowDefinitions="Auto" Margin="0" HorizontalOptions="Start">
+                    <Label Grid.Column="0" Text="Inventory Record:" FontSize="Medium" HorizontalOptions="EndAndExpand" VerticalOptions="Center" />
+                    <Picker Grid.Column="1" HorizontalOptions="StartAndExpand" VerticalOptions="Start" WidthRequest="110"
+                        ItemDisplayBinding="{Binding MonthYear}" ItemsSource="{Binding Records}" SelectedItem="{Binding SelectedRecord}" />
+                </Grid>
+
+
+
+                <!-- Select Groups -->
+                <Grid Grid.Row="1" RowDefinitions="50,Auto">
+                    <Grid Grid.Row="0">
+                        <Button Text="Show/Hide Groups" Command="{Binding ShowGroupsCommand}" HorizontalOptions="Center" />
+                    </Grid>
+                    <Grid Grid.Row="1" HorizontalOptions="StartAndExpand" VerticalOptions="StartAndExpand">
+                        <CollectionView
+                            IsVisible="{Binding IsVisibleGroups}" 
+                            x:DataType="viewModel:GroupTotalsByRecordSubsetViewModel" 
+                            x:Name="GroupDataCollection"
+                            ItemsSource="{Binding Groups}"
+                            SelectionMode="None"
+                            HorizontalOptions="Start"
+                            VerticalOptions="StartAndExpand">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="model:Group">
+                                    <Frame BorderColor="LightGray" HorizontalOptions="FillAndExpand" Padding="2">
+                                    <Grid ColumnDefinitions="30,1*" RowDefinitions="Auto" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                        <CheckBox Grid.Column="0" x:Name="checkBox" HorizontalOptions="Start" />
+                                        <Label Grid.Column="1" x:Name="GroupLabel" Text="{Binding Name}" FontSize="Medium" HorizontalOptions="StartAndExpand" VerticalOptions="Center">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference checkBox}, Path=IsChecked}" Value="true">
+                                                    <Setter Property="FontAttributes" Value="Bold" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                    </Grid>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </Grid>
+                </Grid>
+
+
+
+                <Grid Grid.Row="2">
+                    <CollectionView
+                        x:DataType="viewModel:GroupTotalsByRecordSubsetViewModel" 
+                        x:Name="RecardDataCollection"
+                        ItemsSource="{Binding ReportData}"
+                        SelectionMode="None"
+                        HorizontalOptions="Start"
+                        VerticalOptions="StartAndExpand">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:GroupTotalsByRecord">
+                                <Frame BorderColor="LightGray" HorizontalOptions="FillAndExpand" Padding="10">
+                                    <Grid ColumnDefinitions="280,120" RowDefinitions="Auto" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                        <Label Grid.Column="0" Text="{Binding GroupName}" LineBreakMode="NoWrap" FontSize="14" HorizontalOptions="Start" />
+                                        <Label Grid.Column="1" Text="{Binding Total, StringFormat='{0:N}'}" LineBreakMode="WordWrap" FontSize="14" HorizontalOptions="End" />
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

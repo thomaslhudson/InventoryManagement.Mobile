@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Grid xmlns="http://xamarin.com/schemas/2014/forms" 
+      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+      x:Class="InventoryManagement.Mobile.Views.Templates.EnterUpc" 
+      ColumnDefinitions="{TemplateBinding ScreenWidth}" RowDefinitions="Auto, Auto, Auto, Auto, Auto" Margin="0" 
+      RowSpacing="0" BackgroundColor="White">
+    <!-- Row 0 -->
+    <ContentPresenter Grid.Row="0" />
+    <!-- Row 1 -->
+    <Grid Grid.Row="1" ColumnDefinitions="1*,1*" RowDefinitions="Auto">
+        <!-- Col 0 -->
+        <Label Grid.Column="0" Text="Select Inventory Record:" FontSize="Medium" HorizontalOptions="StartAndExpand" VerticalOptions="Center" />
+        <!-- Col 1 -->
+        <Picker Grid.Column="1" HorizontalOptions="StartAndExpand" VerticalOptions="Start" 
+                        ItemDisplayBinding="{TemplateBinding MonthYear}" 
+                        ItemsSource="{TemplateBinding Records}" 
+                        SelectedItem="{TemplateBinding SelectedRecord}" />
+    </Grid>
+    <!-- Row 2 -->
+    <Label Grid.Row="2" Text="Enter UPC" FontAttributes="Bold" FontSize="Medium" VerticalOptions="End" Margin="0,15,0,0" />
+    <!-- Row 3 -->
+    <Entry Grid.Row="3" x:Name="EntryUpc" Text="{TemplateBinding Parent.BindingContext.EntryUpc}" Keyboard="Numeric" />
+    <!-- Row 4 -->
+    <Button Grid.Row="4" Command="{TemplateBinding Parent.BindingContext.SubmitUpcCommand}" 
+                    CommandParameter="{Binding Source={x:Reference EntryUpc}, Path=Text}" Margin="0,15,0,0"
+                        Text="Find By UPC" HorizontalOptions="Center" VerticalOptions="Center" IsEnabled="False" />
+</Grid>

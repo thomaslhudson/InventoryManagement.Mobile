@@ -1,0 +1,25 @@
+﻿<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:InventoryManagement.Mobile.ViewModels"
+             xmlns:model="clr-namespace:InventoryManagement.Mobile.Models"
+             x:DataType="local:SettingsViewModel"
+             x:Class="InventoryManagement.Mobile.Views.SettingsView"
+             x:Name="SettingsPage"
+             Title="Settings">
+    <ContentPage.Content>
+        <ScrollView x:Name="ScrollArea" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <StackLayout Padding="0" Spacing="0" Orientation="Vertical" VerticalOptions="StartAndExpand">
+                <StackLayout Orientation="Vertical" Margin="20">
+                    <Label Text="Api IP Address" FontSize="Medium" VerticalOptions="Start" HorizontalOptions="Start" />
+                    <Label Text="Example: http://192.168.1.2/InvMan/api/" FontSize="Small" VerticalOptions="Start" HorizontalOptions="Start" />
+                    <Entry Text="{Binding ApiIpAddress}" Margin="0,0,0,25" />
+                    <Button Text="Clear IP Address" Command="{Binding ClearIPAddressCommand}" />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" Margin="20">
+                    <Button Text="Cancel" Command="{Binding CancelCommand}" FontSize="Medium" HorizontalOptions="FillAndExpand" Margin="20" />
+                    <Button Text="Save" Command="{Binding SaveCommand}" IsEnabled="{Binding SaveButtonEnabled}" FontSize="Medium" HorizontalOptions="FillAndExpand" Margin="20" />
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="InventoryManagement.Mobile.Views.RecordsView"
+             xmlns:local="clr-namespace:InventoryManagement.Mobile.ViewModels"
+             xmlns:model="clr-namespace:InventoryManagement.Mobile.Models"
+             xmlns:Helpers="clr-namespace:InventoryManagement.Mobile.Helpers.Converters"
+             x:DataType="local:RecordsViewModel"
+             x:Name="ViewRecords"
+             Title="Inventory Records">
+     <ContentPage.Resources>
+        <ResourceDictionary>
+            <Helpers:MonthNumToName x:Key="monthNumToName" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Add" Command="{Binding AddRecordCommand}" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <ScrollView x:Name="ScrollArea" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <StackLayout Padding="0" Spacing="0">
+                <CollectionView x:DataType="local:RecordsViewModel" 
+                x:Name="RecordsCollection"
+                ItemsSource="{Binding Records}"
+                SelectionMode="Single">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:Record">
+                            <SwipeView>
+                                <SwipeView.RightItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="Delete"
+                                                BackgroundColor="Red"
+                                                Command="{Binding Path=BindingContext.DeleteRecordCommand, Source={x:Reference RecordsCollection}}"
+                                                CommandParameter="{Binding}"/>
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <Frame BorderColor="LightGray" HorizontalOptions="FillAndExpand">
+                                    <StackLayout x:Name="Record" x:DataType="model:Record" Orientation="Horizontal">
+                                        <StackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer 
+                                                Command="{Binding Path=BindingContext.SelectRecordCommand, Source={x:Reference Name=RecordsCollection}}" 
+                                                CommandParameter="{Binding .}" />
+                                        </StackLayout.GestureRecognizers>
+                                        <Label x:Name="MonthYearLabel" x:DataType="model:Record">
+                                            <Label.Text>
+                                                <MultiBinding StringFormat="{}{0} / {1}">
+                                                    <Binding Path="Month" Converter="{StaticResource monthNumToName}" />
+                                                    <Binding Path="Year" />
+                                                </MultiBinding>
+                                            </Label.Text>
+                                        </Label>
+                                    </StackLayout>
+                                </Frame>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    <CollectionView.EmptyView>
+                        <StackLayout>
+                            <StackLayout Padding="10, 25" HorizontalOptions="CenterAndExpand">
+                                <Label Text="No Products found" FontAttributes="Bold" />
+                            </StackLayout>
+                        </StackLayout>
+                    </CollectionView.EmptyView>
+                </CollectionView>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

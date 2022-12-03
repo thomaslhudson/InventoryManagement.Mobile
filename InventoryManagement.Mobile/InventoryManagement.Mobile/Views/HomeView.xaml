@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             ios:Page.UseSafeArea="true"
+             xmlns:vm="clr-namespace:InventoryManagement.Mobile.ViewModels"
+             xmlns:m="clr-namespace:InventoryManagement.Mobile.Models"
+             x:DataType="vm:HomeViewModel"
+             x:Class="InventoryManagement.Mobile.Views.HomeView"
+             Title="Take Inventory"
+             x:Name="HomeViewPage">
+    <ContentPage.Content>
+        <Grid ColumnDefinitions="{Binding ScreenWidth}" RowDefinitions="{Binding ScreenHeight}"  BackgroundColor="White" HorizontalOptions="FillAndExpand" 
+              VerticalOptions="FillAndExpand" Margin="0" Padding="0">
+            <!-- 3 Rows: Buttons / Picker / Body -->
+            <Grid Grid.Row="0" ColumnDefinitions="1*" RowDefinitions="Auto, Auto, Auto">
+                <!-- Grid - Buttons -->
+                <Grid x:Name="Buttons" Grid.Row="0" ColumnDefinitions="{Binding ScreenWidth}" RowDefinitions="1*" BackgroundColor="#2196F3" 
+                      HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <Grid Grid.Row="0" ColumnDefinitions="1*,2*,1*" RowDefinitions="Auto, Auto" HorizontalOptions="Center" VerticalOptions="Center" Margin="25,10,25,10">
+                        <!-- Scan -->
+                        <ImageButton Grid.Row="0" Grid.Column="0" Source="scanner_01.png" BackgroundColor="White" HorizontalOptions="Center" 
+                                     VerticalOptions="Center" HeightRequest="40" WidthRequest="40" Command="{Binding SelectTabCommand}" CommandParameter="1" />
+                        <Label Grid.Row="1" Grid.Column="0" Text="Scan UPC" TextColor="White" HorizontalTextAlignment="Center" />
+                        <!-- Enter -->
+                        <ImageButton Grid.Row="0" Grid.Column="1" Source="input_upc.png" BackgroundColor="White" HorizontalOptions="Center" 
+                                     VerticalOptions="Center" HeightRequest="40" WidthRequest="40" Command="{Binding SelectTabCommand}" CommandParameter="2" />
+                        <Label Grid.Row="1" Grid.Column="1" Text="Enter UPC" TextColor="White" HorizontalTextAlignment="Center" />
+                        <!-- Select -->
+                        <ImageButton Grid.Row="0" Grid.Column="2" Source="select_product_01.png" BackgroundColor="White" HorizontalOptions="Center" 
+                                 VerticalOptions="Center" HeightRequest="40" WidthRequest="40" Command="{Binding SelectTabCommand}" CommandParameter="3" />
+                        <Label Grid.Row="1" Grid.Column="2" Text="Select Product" TextColor="White" HorizontalTextAlignment="Center" />
+                    </Grid>
+                </Grid>
+                <!-- Picker -->
+                <Grid x:Name="Picker" Grid.Row="1" ColumnDefinitions="1*,1*" RowDefinitions="1*" Margin="25,0,0,0" BackgroundColor="#White">
+                    <Label Grid.Column="0" Text="Inventory Record:" FontSize="Medium" HorizontalOptions="EndAndExpand" VerticalOptions="Center" />
+                    <Picker Grid.Column="1" WidthRequest="100" HorizontalOptions="StartAndExpand" VerticalOptions="Start"
+                            ItemDisplayBinding="{Binding MonthYear}" ItemsSource="{Binding Records}" SelectedItem="{Binding SelectedRecord}" />
+                </Grid>
+                <!-- Grid - Main Body Wrapper -->
+                <Grid x:Name="Body" Grid.Row="2" ColumnDefinitions="{Binding ScreenWidth}" RowDefinitions="Auto,Auto" Padding="0" Margin="0">
+                    <!-- Scan Tab -->
+                    <Grid Grid.Row="0" ColumnDefinitions="1*" RowDefinitions="1*" Margin="0" Padding="0" IsVisible="{Binding ScanTabVisible}">
+                        <Grid Grid.Row="0" x:Name="ScannerView" ColumnDefinitions="1*" RowDefinitions="1*,Auto" Margin="25" RowSpacing="5">
+                            <zxing:ZXingScannerView 
+		                        Grid.Row="0" 
+		                        x:Name="Scanner" 
+		                        Margin="0,15,0,0"
+                                HeightRequest="300"
+		                        IsAnalyzing="{Binding BindingContext.IsAnalyzing, Source={x:Reference HomeViewPage}, Mode=TwoWay}" 
+		                        IsScanning="{Binding BindingContext.IsScanning, Source={x:Reference HomeViewPage}, Mode=TwoWay}" 
+		                        ScanResultCommand="{Binding BindingContext.ProcessScanResultCommand, Source={x:Reference HomeViewPage}, Mode=TwoWay}" 
+		                        Result="{Binding BindingContext.ScanResult, Source={x:Reference HomeViewPage}, Mode=OneWayToSource}" 
+		                        HorizontalOptions="FillAndExpand">
+                            </zxing:ZXingScannerView>
+
+                            <zxing:ZXingDefaultOverlay Grid.Row="0" />
+                            <Button Grid.Row="1" Text="Scan Bar Code" Margin="0,25,0,0" 
+                                Command="{Binding ScanBarcodeCommand, Mode=TwoWay}" 
+                                IsEnabled="{Binding ScanBarcodeButtonEnabled}" IsVisible="true" HorizontalOptions="Center" />
+                        </Grid>
+                    </Grid>
+                    <!-- Enter Tab -->
+                    <Grid Grid.Row="1" ColumnDefinitions="1*" RowDefinitions="Auto" Margin="0" Padding="0" IsVisible="{Binding EnterTabVisible}">
+                        <Grid Grid.Row="0" ColumnDefinitions="Auto, Auto" RowDefinitions="Auto, Auto" Margin="25,0,0,25" RowSpacing="5" HorizontalOptions="CenterAndExpand">
+                            <Label Grid.Row="0" Grid.Column="0" Text="Enter UPC:" FontAttributes="Bold" FontSize="Medium" VerticalOptions="End" Margin="0,0,0,10" />
+                            <Entry Grid.Row="0" Grid.Column="1" x:Name="EntryUpc" Text="{Binding EntryUpc}" Keyboard="Numeric" WidthRequest="150" Margin="0,25,0,0"
+                                   HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" />
+                            <Button Grid.Row="2" Grid.ColumnSpan="2" Command="{Binding SubmitUpcCommand}" CommandParameter="{Binding Source={x:Reference EntryUpc}, Path=Text}" Margin="0,25,0,0"
+                                    Text="Find By UPC" HorizontalOptions="Center" VerticalOptions="Center" IsEnabled="False" />
+                        </Grid>
+                    </Grid>
+                    <!-- Select Tab -->
+                    <Grid Grid.Row="2" ColumnDefinitions="Auto" RowDefinitions="Auto" Margin="0" Padding="0" IsVisible="{Binding SelectTabVisible}">
+                        <Grid Grid.Row="0" ColumnDefinitions="Auto" RowDefinitions="Auto, Auto" Margin="25,0,25,0" RowSpacing="25">
+                            <SearchBar Grid.Row="0" x:Name="SearchBar" WidthRequest="400" Text="{Binding SearchProductText}" 
+                                   HorizontalOptions="Start" VerticalOptions="StartAndExpand">
+                                <SearchBar.HeightRequest>
+                                    <OnPlatform x:TypeArguments="x:Double" iOS="-1.0" Android="40.0" WinPhone="-1" />
+                                </SearchBar.HeightRequest>
+                            </SearchBar>
+                            <CollectionView Grid.Row="1"
+                            x:DataType="vm:HomeViewModel"
+                            x:Name="ProductsCollection"
+                            ItemsSource="{Binding ProductsFiltered}"
+                            SelectionMode="Single"
+                            HorizontalOptions="Start"
+                            VerticalOptions="StartAndExpand" VerticalScrollBarVisibility="Always">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="m:Product">
+                                        <Frame BorderColor="LightGray" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                            <StackLayout x:Name="Product" x:DataType="m:Product" Orientation="Horizontal">
+                                                <StackLayout.GestureRecognizers>
+                                                    <TapGestureRecognizer 
+                                            Command="{Binding Path=BindingContext.SelectProductCommand, Source={x:Reference Name=ProductsCollection}}"
+                                            CommandParameter="{Binding Id }" />
+                                                </StackLayout.GestureRecognizers>
+                                                <Label Text="{Binding Name}" LineBreakMode="NoWrap" FontSize="16" HorizontalOptions="StartAndExpand" />
+                                            </StackLayout>
+                                        </Frame>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                                <CollectionView.EmptyView>
+                                    <StackLayout BackgroundColor="White" HorizontalOptions="CenterAndExpand">
+                                        <Label HorizontalOptions="CenterAndExpand" Padding="25" Text="No Products found" FontAttributes="Bold" />
+                                    </StackLayout>
+                                </CollectionView.EmptyView>
+                            </CollectionView>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

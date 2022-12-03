@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:InventoryManagement.Mobile.ViewModels"
+             x:Class="InventoryManagement.Mobile.Views.ReportView"
+             x:DataType="vm:ReportsViewModel"
+             Title="Reports">
+    <ContentPage.Content>
+        <ScrollView x:Name="ScrollArea" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Grid ColumnDefinitions="{Binding ScreenWidth}" RowDefinitions="Auto, Auto, Auto, Auto" Margin="25" RowSpacing="25"
+                  VerticalOptions="Start">
+                <!-- Picker -->
+                <Grid Grid.Row="0" ColumnDefinitions="1*,1*" RowDefinitions="Auto" Margin="0,0,0,0">
+                    <Label Grid.Column="0" Text="Inventory Record:" FontSize="Medium" HorizontalOptions="EndAndExpand" VerticalOptions="Center" />
+                    <Picker Grid.Column="1" WidthRequest="100" HorizontalOptions="StartAndExpand" VerticalOptions="Start" 
+                                    ItemDisplayBinding="{Binding MonthYear}" ItemsSource="{Binding Records}" SelectedItem="{Binding SelectedRecord}" />
+                </Grid>
+
+                <Label Grid.Row="1" Text="Select A Report" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="CenterAndExpand" />
+                <Button Grid.Row="2" Text="Group Totals by Record" Command="{Binding GroupTotalsByRecordCommand}" FontSize="Medium" />
+                <Button Grid.Row="3" Text="Select Groups Totals by Record" Command="{Binding GroupTotalsByRecordSubsetCommand}" FontSize="Medium" />
+                <Button Grid.Row="4" Text="Report 3" FontSize="Medium" />
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

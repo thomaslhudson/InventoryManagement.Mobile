@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             ios:Page.UseSafeArea="true"
+             xmlns:behaviors="clr-namespace:InventoryManagement.Mobile.Helpers.Behaviors"
+             xmlns:vm="clr-namespace:InventoryManagement.Mobile.ViewModels"
+             x:Class="InventoryManagement.Mobile.Views.ProductAddView"
+             x:DataType="vm:ProductAddViewModel"
+             Title="Add New Product">
+    <ContentPage.Content>
+        <ScrollView x:Name="ScrollArea" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <StackLayout Padding="0" Spacing="20">
+                <Grid ColumnDefinitions="95,*" Padding="15">
+                    <Label Grid.Column="0" Grid.Row="0" Text="Name" FontSize="Medium" HorizontalOptions="End" VerticalOptions="Center" />
+                    <Entry x:Name="EntryName" Grid.Column="1" Grid.Row="0" Text="{Binding Name, Mode=TwoWay}" FontSize="Medium" VerticalOptions="Center" />
+                    <Label Grid.Column="0" Grid.Row="1" Text="UPC" FontSize="Medium" HorizontalOptions="End" VerticalOptions="Center" />
+                    <Editor Grid.Column="1" Grid.Row="1" Text="{Binding Upc, Mode=TwoWay}" AutoSize="TextChanges" FontSize="Medium" Margin="0" VerticalOptions="Center" />
+                    <Label Grid.Column="0" Grid.Row="2" Text="Unit Price" FontSize="Medium" HorizontalOptions="End" VerticalOptions="Center" />
+                    <Entry Grid.Column="1" Grid.Row="2" x:Name="UnitPrice" Keyboard="Numeric" HorizontalOptions="FillAndExpand" Text="{Binding UnitPrice}" VerticalOptions="Center">
+                        <Entry.Behaviors>
+                            <behaviors:FormatDecimal NumberOfDecimalPlaces="2"/>
+                        </Entry.Behaviors>
+                    </Entry>
+                    <Label Grid.Column="0" Grid.Row="3" FontSize="Medium" HorizontalOptions="End" Text="Active" VerticalOptions="Center" />
+                    <CheckBox Grid.Column="1" Grid.Row="3" x:Name="Active" HorizontalOptions="Start" VerticalOptions="Center" IsChecked="{Binding IsActive}" />
+                    <Label Grid.Column="0" Grid.Row="4" Text="Group" FontSize="Medium" HorizontalOptions="End" VerticalOptions="Center" />
+                    <Picker Grid.Column="1" Grid.Row="4" x:Name="GroupPicker" VerticalOptions="Center" 
+                            ItemDisplayBinding="{Binding Name}"
+                            ItemsSource="{Binding Groups}"
+                            SelectedItem="{Binding SelectedGroup, Mode=TwoWay}" />
+                </Grid>
+                <Grid ColumnDefinitions="*,*">
+                    <Button Grid.Column="0" Text="Cancel" Command="{Binding CancelCommand}" FontSize="Medium" HorizontalOptions="FillAndExpand" Margin="20" />
+                    <Button Grid.Column="1" Text="Save" Command="{Binding CreateCommand}" FontSize="Medium" HorizontalOptions="FillAndExpand" Margin="20" />
+                </Grid>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

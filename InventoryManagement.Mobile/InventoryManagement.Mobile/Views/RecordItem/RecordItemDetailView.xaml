@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:Helpers="clr-namespace:InventoryManagement.Mobile.Helpers.Converters"
+             xmlns:vm="clr-namespace:InventoryManagement.Mobile.ViewModels"
+             xmlns:m="clr-namespace:InventoryManagement.Mobile.Models"
+             x:Class="InventoryManagement.Mobile.Views.RecordItemDetailView"
+             x:DataType="vm:RecordItemDetailViewModel"
+             Title="Record Item Detail">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Helpers:MonthNumToName x:Key="monthNumToName" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <ScrollView x:Name="ScrollArea" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Grid ColumnDefinitions="{Binding ScreenWidth}" RowDefinitions="Auto, 40, 40, Auto, 60, Auto, 210, 75" RowSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
+                <!-- Row 0 -->
+                <Label Grid.Row="0" Text="{Binding RecordMonthYear}" BackgroundColor="{Binding TitleBackgroundColor}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" 
+                   Padding="0,10,0,10" FontAttributes="Bold" TextColor="{Binding TitleTextColor}" WidthRequest="480" FontSize="20" HorizontalTextAlignment="Center">
+                    <!--<Label.Text>
+                        <MultiBinding StringFormat="{}{0} / {1}">
+                            <Binding Path="RecordMonth" Converter="{StaticResource monthNumToName}" />
+                            <Binding Path="RecordYear" />
+                        </MultiBinding>
+                    </Label.Text>-->
+                </Label>
+                <!-- Row 1 -->
+                <Label Grid.Row="1" Text="{Binding ProductName}" FontAttributes="Bold" FontSize="Medium" Padding="20,0,0,0"
+                        HorizontalOptions="StartAndExpand" VerticalOptions="EndAndExpand" />
+                <!-- Row 2 -->
+                <Label Grid.Row="2" Text="{Binding ProductGroupName}" FontSize="Medium" Padding="20,0,0,0"
+                        HorizontalOptions="StartAndExpand" VerticalOptions="EndAndExpand" />
+                <!-- Row 3 -->
+                <Grid Grid.Row="3" ColumnDefinitions="Auto,Auto" VerticalOptions="CenterAndExpand" Margin="20,20,0,0">
+                    <Label Grid.Column="0" Text="Add Quantity:" FontAttributes="Bold" Padding="0,0,0,5" HorizontalTextAlignment="End" 
+                       HorizontalOptions="EndAndExpand" VerticalOptions="Center" />
+                    <Entry Grid.Column="1" Keyboard="Numeric" Text="{Binding AddQuantity}" Margin="10,0,0,0" WidthRequest="75" HorizontalTextAlignment="Start"
+                       HorizontalOptions="EndAndExpand" VerticalOptions="Center" />
+                </Grid>
+                <!-- Col 4 -->
+                <Grid Grid.Row="4" ColumnDefinitions="225*,225*" RowDefinitions="10,10,10" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Margin="20,0,0,0">
+                    <Grid Grid.Column="0" ColumnDefinitions="135*,80*" RowDefinitions="55" HorizontalOptions="Start">
+                        <Label Grid.Column="0" Text="Running Total:" FontSize="Small" HorizontalTextAlignment="End" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{Binding Quantity, StringFormat='{0:N}'}" FontSize="Small" Padding="15,0,0,0" VerticalOptions="Center" />
+                    </Grid>
+                    <Grid Grid.Column="1" ColumnDefinitions="100*,110*" RowDefinitions="55" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <Label Grid.Column="0" Text="Unit Price:" FontSize="Small" HorizontalTextAlignment="End" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{Binding ProductUnitPrice, StringFormat='${0:N}'}" FontSize="Small" Padding="15,0,25,0" HorizontalOptions="End" VerticalOptions="Center" />
+                    </Grid>
+                </Grid>
+                <!-- Row 5 -->
+                <Grid Grid.Row="5" ColumnDefinitions="1*,1*" RowDefinitions="1*,1*" Padding="0" Margin="0,0,0,10">
+                    <Label Grid.Row="1" Grid.Column="0" Text="Inventory Record" Margin="25,0,0,0" HorizontalTextAlignment="Start" HorizontalOptions="StartAndExpand" VerticalOptions="Start" />
+                    <Label Grid.Row="1"  Grid.Column="1" Text="Quantity" Margin="0,0,50,0" HorizontalTextAlignment="Start" HorizontalOptions="EndAndExpand" VerticalOptions="Start" />
+                </Grid>
+                <!-- Row 6 -->
+                <CollectionView Grid.Row="6"
+                    ItemsSource="{Binding RecordItems}"
+                    SelectionMode="None"
+                    VerticalScrollBarVisibility="Always"
+                    HorizontalOptions="FillAndExpand"
+                    Margin="20,0,15,0">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="m:RecordItem">
+                            <Frame BorderColor="LightGray" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                <Grid ColumnDefinitions="1*, 1*" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                    <Label Grid.Column="0" Text="{Binding RecordMonthYear}" LineBreakMode="NoWrap" FontSize="16" HorizontalOptions="FillAndExpand" />
+                                    <Label Grid.Column="1" Text="{Binding Quantity, StringFormat='{0:N}'}" LineBreakMode="NoWrap" FontSize="16" HorizontalOptions="EndAndExpand" Padding="0,0,20,0" />
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    <CollectionView.EmptyView>
+                        <Frame BorderColor="LightGray" HorizontalOptions="FillAndExpand" VerticalOptions="Start" WidthRequest="480">
+                            <Grid ColumnDefinitions="25" RowDefinitions="480" HorizontalOptions="CenterAndExpand">
+                                <Label Grid.ColumnSpan="2" Grid.Row="0" Padding="25" Text="No Records Found" FontAttributes="Bold" 
+                                    HorizontalOptions="Center" />
+                            </Grid>
+                        </Frame>
+                    </CollectionView.EmptyView>
+                </CollectionView>
+                <!-- Row 7 -->
+                <Grid Grid.Row="7" ColumnDefinitions="1*,1*" RowDefinitions="75" Margin="20,0,20,0"
+                  HorizontalOptions="FillAndExpand" VerticalOptions="Start">
+                    <Button Grid.Column="0" Text="Cancel" Command="{Binding CancelCommand}" HorizontalOptions="Start" VerticalOptions="End" />
+                    <Button Grid.Column="1" Text="Save" Command="{Binding SaveCommand}" HorizontalOptions="End" VerticalOptions="End" />
+                </Grid>
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

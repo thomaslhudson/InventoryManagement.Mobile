@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="InventoryManagement.Mobile.Views.GroupsView"
+             xmlns:local="clr-namespace:InventoryManagement.Mobile.ViewModels" 
+             xmlns:model="clr-namespace:InventoryManagement.Mobile.Models"
+             x:DataType="local:GroupsViewModel"
+             x:Name="ViewGroups">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Add" Command="{Binding AddGroupCommand}" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <ScrollView x:Name="ScrollArea" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <StackLayout Padding="0" Spacing="0">
+                <CollectionView x:DataType="local:GroupsViewModel" 
+                x:Name="GroupsCollection"
+                ItemsSource="{Binding Groups}"
+                SelectionMode="Single">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:Group">
+                            <SwipeView>
+                                <SwipeView.RightItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="Delete"
+                                            BackgroundColor="Red"
+                                            Command="{Binding Path=BindingContext.DeleteGroupCommand, Source={x:Reference GroupsCollection}}"
+                                            CommandParameter="{Binding}"/>
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <Frame BorderColor="LightGray" HorizontalOptions="FillAndExpand">
+                                    <StackLayout x:Name="Group" x:DataType="model:Group" Orientation="Horizontal">
+                                        <StackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer 
+                                            Command="{Binding Path=BindingContext.SelectGroupCommand, Source={x:Reference Name=GroupsCollection}}"
+                                            CommandParameter="{Binding Id }" />
+                                        </StackLayout.GestureRecognizers>
+                                        <Label Text="{Binding Name}" LineBreakMode="WordWrap" FontSize="14" HorizontalOptions="Start" />
+                                    </StackLayout>
+                                </Frame>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

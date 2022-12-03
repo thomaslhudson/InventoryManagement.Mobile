@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Grid xmlns="http://xamarin.com/schemas/2014/forms" 
+      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+      xmlns:vm="clr-namespace:InventoryManagement.Mobile.ViewModels"
+      xmlns:m="clr-namespace:InventoryManagement.Mobile.Models"
+      x:Class="InventoryManagement.Mobile.Views.Templates.SelectProduct" 
+      x:DataType="vm:HomeTabViewModel"
+      ColumnDefinitions="{TemplateBinding ScreenWidth}" RowDefinitions="Auto, 50, Auto" Margin="0" RowSpacing="5">
+    <!-- Row 0 -->
+    <ContentPresenter Grid.Row="0" />
+    <!-- Row 1 -->
+    <Grid Grid.Row="1" ColumnDefinitions="1*,1*" RowDefinitions="Auto, Auto" Margin="25">
+        <Label Grid.Column="0" Text="Select Inventory Record:" FontSize="Medium" HorizontalOptions="StartAndExpand" VerticalOptions="Center" />
+        <Picker Grid.Column="1" HorizontalOptions="StartAndExpand" VerticalOptions="Start" 
+                        ItemDisplayBinding="{TemplateBinding BindingContext.MonthYear}" 
+                        ItemsSource="{TemplateBinding BindingContext.Records}" 
+                        SelectedItem="{TemplateBinding BindingContext.SelectedRecord}" />
+    </Grid>
+    <!-- Row 2 -->
+    <SearchBar Grid.Row="2" x:Name="SearchBar" Margin="25,0,0,25" Text="{TemplateBinding BindingContext.SearchProductText}" VerticalOptions="StartAndExpand">
+        <SearchBar.HeightRequest>
+            <OnPlatform x:TypeArguments="x:Double" iOS="-1.0" Android="40.0" WinPhone="-1" />
+        </SearchBar.HeightRequest>
+    </SearchBar>
+    <!-- Row 3 -->
+    <CollectionView Grid.Row="3"
+            x:DataType="vm:HomeTabViewModel"
+            x:Name="ProductsCollection"
+            ItemsSource="{TemplateBinding BindingContext.ProductsFiltered}"
+            SelectionMode="Single"
+            VerticalOptions="StartAndExpand" VerticalScrollBarVisibility="Always">
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="m:Product">
+                <Frame BorderColor="LightGray" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <StackLayout x:Name="Product" x:DataType="m:Product" Orientation="Horizontal">
+                        <StackLayout.GestureRecognizers>
+                            <TapGestureRecognizer 
+                                            Command="{TemplateBinding Parnet.BindingContext.SelectProductCommand}"
+                                            CommandParameter="{Binding Id }" />
+                        </StackLayout.GestureRecognizers>
+                        <Label Text="{Binding Name}" LineBreakMode="NoWrap" FontSize="16" HorizontalOptions="StartAndExpand" />
+                    </StackLayout>
+                </Frame>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+        <CollectionView.EmptyView>
+            <StackLayout BackgroundColor="White" HorizontalOptions="CenterAndExpand">
+                <Label HorizontalOptions="CenterAndExpand" Padding="25" Text="No Products found" FontAttributes="Bold" />
+            </StackLayout>
+        </CollectionView.EmptyView>
+    </CollectionView>
+</Grid>
